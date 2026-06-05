@@ -15,7 +15,7 @@ class MenuController extends Controller
             Session::put('tableNumber', $tableNumber);
         }
 
-        $items = Item::where('is_active', 1)->orderBy('name','asc')->get();
+        $items = Item::where('is_active', 1)->orderBy('name', 'asc')->get();
 
         return view('customers.menu', compact('items', 'tableNumber'));
     }
@@ -41,7 +41,7 @@ class MenuController extends Controller
 
         $cart = Session::get('cart');
 
-        if(isset($cart[$menuId])) {
+        if (isset($cart[$menuId])) {
             $cart[$menuId]['qty'] += 1;
         } else {
             $cart[$menuId] = [
@@ -60,5 +60,26 @@ class MenuController extends Controller
             'message' => 'Berhasil ditambahkan ke keranjang',
             'cart' => $cart
         ]);
+    }
+
+    public function updateCart(Request $request)
+    {
+        $itemId = $request->input('id');
+        $newQty = $request->input('qty');
+
+        if ($newQty <= 0) {
+            return response()->json(['success' => false]);
+        }
+
+        $cart = Session::get('cart');
+        if (isset($cart[$itemId])) {
+            $cart[$itemId]['qty'] = $newQty;
+            Session::put('cart', $cart);
+            Session::flash('success', 'Jumlah item berhasil diperbarui');
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false]);
     }
 }
