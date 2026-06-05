@@ -9,30 +9,30 @@
     </ol>
 </div>
 <!-- Single Page Header End -->
-<!-- Checkout Page Start -->
         <div class="container-fluid py-5">
             <div class="container py-5">
                 <h1 class="mb-4">Detail Pembayaran</h1>
-                <form action="#">
+                <form id="checkout-form" action="{{ route('checkout.store') }}" method="POST">
+                    @csrf
                     <div class="row g-5">
                         <div class="col-md-12 col-lg-6 col-xl-6">
                             <div class="row">
                                 <div class="col-md-12 col-lg-4">
                                     <div class="form-item w-100">
                                         <label class="form-label my-3">Nama Lengkap<sup>*</sup></label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" name="fullname" class="form-control" placeholder="Masukka nama Anda" required>
                                     </div>
                                 </div>
-                                <div class="col-md-12 col-lg-4">
-                                    <div class="form-item w-100">
-                                        <label class="form-label my-3">Nomor WhatsApp<sup>*</sup></label>
-                                        <input type="text" class="form-control" required>
+                                    <div class="col-md-12 col-lg-4">
+                                        <div class="form-item w-100">
+                                            <label class="form-label my-3">Nomor WhatsApp<sup>*</sup></label>
+                                            <input type="text" name="phone" class="form-control" placeholder="Masukkan Nomor WhatsApp Anda" required>
+                                        </div>
                                     </div>
-                                </div>
                                 <div class="col-md-12 col-lg-4">
                                     <div class="form-item w-100">
                                         <label class="form-label my-3">Nomor Meja<sup>*</sup></label>
-                                        <input type="text" class="form-control" disabled required>
+                                        <input type="text" class="form-control" value="{{ $tableNumber ?? 'Tidak ada nomor meja' }}" disabled required>
                                     </div>
                                 </div>
                             </div>   
@@ -126,7 +126,7 @@
                                     </div>
 
                                     <div class="d-flex justify-content-end">
-                                        <button type="button" class="btn border-secondary py-3 text-uppercase text-primary">Konfirmasi Pesanan</button> 
+                                        <button type="submit" class="btn border-secondary py-3 text-uppercase text-primary">Konfirmasi Pesanan</button> 
                                     </div>
                                     
                                 </div>
