@@ -127,7 +127,7 @@ class MenuController extends Controller
         $cart = Session::get('cart');
         $tableNumber = Session::get('tableNumber');
 
-        if(empty($cart)) {
+        if (empty($cart)) {
             return redirect()->route('cart')->with('error', 'Keranjang masih kosong');
         }
 
@@ -164,7 +164,7 @@ class MenuController extends Controller
         ]);
 
         $order = Order::create([
-            'order_code' => 'ORD-'.$tableNumber.'-'. time(),
+            'order_code' => 'ORD-' . $tableNumber . '-' . time(),
             'user_id' => $user->id,
             'subtotal' => $totalAmount,
             'tax' => 0.1 * $totalAmount,
@@ -188,7 +188,24 @@ class MenuController extends Controller
 
         Session::forget('cart');
 
-        return redirect()->route('menu')->with('success', 'Pesanan berhasil dibuat!');
+        return redirect()->route('checkout.success', ['orderId' => $order->order_code])->with('success', 'Pesanan berhasil dibuat!');
     }
 
+    public function checkoutSuccess($orderId)
+    {
+        $order = Order::where('order_code', $orderId)->first();
+
+        if (!$order) {
+            return redirect()->route('menu')->with('error', 'Pesanan tidak ditemukan');
+        }
+
+        $orderItems = OrderItem::where('order_id', $order->id)->get();
+
+        if ($order->payment_method == 'qris') {
+            $order->status  = 'settlement';
+            $order->save();
+        }
+
+        return view('customers.success', compact('order', 'orderItems'));
+    }
 }
