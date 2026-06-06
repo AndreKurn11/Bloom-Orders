@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
@@ -24,11 +25,11 @@ Route::get('/checkout/success/{orderId}', [MenuController::class, 'checkoutSucce
 
 
 // Admin Routes
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
-})->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::resource('categories', CategoryController::class);
 Route::resource('orders', OrderController::class);
+Route::post('orders/{order}', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 Route::resource('items', ItemController::class);
+Route::post('items/update-status/{order}', [ItemController::class, 'updateStatus'])->name('items.updateStatus');
 Route::resource('users', UserController::class);
 Route::resource('roles', RoleController::class);
