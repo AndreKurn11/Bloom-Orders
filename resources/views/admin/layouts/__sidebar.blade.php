@@ -3,7 +3,7 @@
         <div class="sidebar-header position-relative">
             <div class="d-flex justify-content-between align-items-center">
                 <h4 class="logo">
-                    <a href="{{ url('index') }}">Restoranku</a>
+                    <a href="{{ url('index') }}">Bloom Coffee & Place</a>
                 </h4>
                 <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"
