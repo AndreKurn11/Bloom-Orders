@@ -19,16 +19,16 @@ class MenuController extends Controller
             Session::put('tableNumber', $tableNumber);
         }
 
-        $items = Item::where('is_active', 1)->orderBy('name', 'asc')->get();
+        $items = Item::where('is_active', 1)->orderBy('name','asc')->get();
 
-        return view('customers.menu', compact('items', 'tableNumber'));
+        return view('customer.menu', compact('items', 'tableNumber'));
     }
 
     // Cart
     public function cart()
     {
         $cart = Session::get('cart');
-        return view('customers.cart', compact('cart'));
+        return view('customer.cart', compact('cart'));
     }
 
     public function addToCart(Request $request)
@@ -45,7 +45,7 @@ class MenuController extends Controller
 
         $cart = Session::get('cart');
 
-        if (isset($cart[$menuId])) {
+        if(isset($cart[$menuId])) {
             $cart[$menuId]['qty'] += 1;
         } else {
             $cart[$menuId] = [
@@ -81,14 +81,13 @@ class MenuController extends Controller
             Session::put('cart', $cart);
             Session::flash('success', 'Jumlah item berhasil diperbarui');
 
-            return response()->json(['success' => true]);
+            return response()->json([ 'success' => true]);
         }
 
         return response()->json(['success' => false]);
     }
 
-    public function removeCart(Request $request)
-    {
+    public function removeCart(Request $request) {
         $itemId = $request->input('id');
 
         $cart = Session::get('cart');
@@ -113,13 +112,13 @@ class MenuController extends Controller
     public function checkout()
     {
         $cart = Session::get('cart');
-        if (empty($cart)) {
+        if(empty($cart)) {
             return redirect()->route('cart')->with('error', 'Keranjang masih kosong');
         }
 
         $tableNumber = Session::get('tableNumber');
 
-        return view('customers.checkout', compact('cart', 'tableNumber'));
+        return view('customer.checkout', compact('cart','tableNumber'));
     }
 
     public function storeOrder(Request $request)
@@ -127,7 +126,7 @@ class MenuController extends Controller
         $cart = Session::get('cart');
         $tableNumber = Session::get('tableNumber');
 
-        if (empty($cart)) {
+        if(empty($cart)) {
             return redirect()->route('cart')->with('error', 'Keranjang masih kosong');
         }
 
@@ -164,7 +163,7 @@ class MenuController extends Controller
         ]);
 
         $order = Order::create([
-            'order_code' => 'ORD-' . $tableNumber . '-' . time(),
+            'order_code' => 'ORD-'.$tableNumber.'-'. time(),
             'user_id' => $user->id,
             'subtotal' => $totalAmount,
             'tax' => 0.1 * $totalAmount,
@@ -188,7 +187,7 @@ class MenuController extends Controller
 
         Session::forget('cart');
 
-        if ($request->payment_method == 'tunai') {
+        if($request->payment_method == 'tunai') {
             return redirect()->route('checkout.success', ['orderId' => $order->order_code])->with('success', 'Pesanan berhasil dibuat');
         } else {
             \Midtrans\Config::$serverKey = config('midtrans.server_key');
@@ -197,16 +196,16 @@ class MenuController extends Controller
             \Midtrans\Config::$is3ds = true;
 
             $params = [
-                'transaction_details' => [
-                    'order_id' => $order->order_code,
-                    'gross_amount' =>  (int) $order->grand_total,
+                    'transaction_details' => [
+                        'order_id' => $order->order_code,
+                        'gross_amount' =>  (int) $order->grand_total,
                 ],
-                'item_details' => $itemDetails,
-                'customers_details' => [
-                    'first_name' => $user->fullname ?? 'Guest',
-                    'phone' => $user->phone,
+                    'item_details' => $itemDetails,
+                    'customer_details' => [
+                        'first_name' => $user->fullname ?? 'Guest',
+                        'phone' => $user->phone,
                 ],
-                'payment_type' => 'qris',
+                    'payment_type' => 'qris',
             ];
 
             try {
@@ -240,6 +239,7 @@ class MenuController extends Controller
             $order->save();
         }
 
-        return view('customers.success', compact('order', 'orderItems'));
+        return view('customer.success', compact('order', 'orderItems'));
+
     }
 }

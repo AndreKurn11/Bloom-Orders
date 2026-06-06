@@ -52,7 +52,7 @@
                                 <form action="{{ route('roles.destroy', $role->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah anda yakin ingin menghapus role ini?')">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah anda yakin ingin menghapus menu ini?')">
                                         <i class="bi bi-trash"></i> Hapus
                                     </button>
                                 </form>

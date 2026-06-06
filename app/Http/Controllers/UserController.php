@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
@@ -16,7 +15,7 @@ class UserController extends Controller
     public function index()
     {
         // Fetch all users from the database
-        $users = User::whereHas('role', function ($query) {
+        $users = User::whereHas('role', function($query) {
             $query->where('role_name', '!=', 'customer');
         })->orderBy('fullname')->get();
 
@@ -103,14 +102,9 @@ class UserController extends Controller
             'fullname' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,' . $user->id,
             'phone' => 'required|string|max:15',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'password' => [
-                'nullable',
-                'string',
-                'min:8',
-                'confirmed',
-                function ($attribute, $value, $fail) use ($user) {
-                    if (Hash::check($value, $user->password)) {
+            'email' => 'required|email|unique:users,email,'. $user->id,
+            'password' => ['nullable','string','min:8','confirmed', function($attribute, $value, $fail) use ($user) {
+                    if(Hash::check($value, $user->password)) {
                         $fail("Password baru tidak boleh sama dengan password lama");
                     }
                 },

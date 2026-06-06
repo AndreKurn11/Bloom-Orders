@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
@@ -34,7 +33,7 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
 
         // Update the order status to 'settled'
-        if (Auth::user()->role->role_name == 'admin' || Auth::user()->role->role_name == 'cashier') {
+        if(Auth::user()->role->role_name == 'admin' || Auth::user()->role->role_name == 'cashier') {
             $order->status = 'settlement';
         } else {
             $order->status = 'cooked';

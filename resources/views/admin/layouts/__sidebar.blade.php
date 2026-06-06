@@ -3,7 +3,7 @@
         <div class="sidebar-header position-relative">
             <div class="d-flex justify-content-between align-items-center">
                 <h4 class="logo">
-                    <a href="{{ url('index') }}">Bloom Coffee & Place</a>
+                    <a href="{{ url('index') }}">Restoranku</a>
                 </h4>
                 <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"
@@ -62,7 +62,7 @@
                         <span>Daftar Menu</span>
                     </a>
                 </li>
-                
+                @if (Auth::user()->role->role_name == 'admin')
                 <li class="sidebar-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
                     <a href="{{ route('users.index') }}" class='sidebar-link'>
                         <i class="bi bi-people-fill"></i>
@@ -82,9 +82,15 @@
                         <span>Manajemen Kategori</span>
                     </a>
                 </li>
-                
+                @endif
                 <li class="sidebar-item">
-                    
+                    <form method="POST" action="{{ route('logout') }}" onclick="event.preventDefault();this.closest('form').submit();">
+                        @csrf
+                        <a href="{{ route('logout') }}" class='sidebar-link'>
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>{{ __('Log Out') }}</span>
+                        </a>
+                    </form>
                 </li>
             </ul>
         </div>
